@@ -1,33 +1,21 @@
-name: Publish the app
+name: Deploy Website
 
 on: [push]
 
 jobs:
-  download:
+  build:
     runs-on: ubuntu-latest
-    name: Get node and yarn
+    name: Deploying to surge
     steps:
       - uses: actions/checkout@v2
-      - name: Get Node.js v 12
+      - name: Install Node.js
         uses: actions/setup-node@v2-beta
         with:
           node-version: 12
-      - name: Fetch the Yarn to install
+      - name: Prepare for Yarn Installation
         run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-      - name: clean yarn
-        run: yarn cache clean
-  install:
-    runs-on: ubuntu-latest
-    name: install yarn
-    needs: download
-    steps:
       - name: install yarn
         run: sudo apt update && sudo apt install yarn
-  build:
-    runs-on: ubuntu-latest
-    name: build app
-    needs: install
-    steps:
       - name: Build React App
         run: yarn build
       - name: Install Surge
